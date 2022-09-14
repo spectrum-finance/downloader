@@ -1,0 +1,12 @@
+# Project exclude paths
+/modules/aggregator/target/
+/modules/explorer/target/
+/modules/ispoApi/target/
+/modules/tracker/target/
+/project/project/target/
+/project/target/
+/target/
+.idea
+/.idea/
+.bsp
+/.bsp
