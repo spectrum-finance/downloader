@@ -43,3 +43,5 @@ lazy val root = (project in file("."))
       Libraries.pureconfig
     ) ++ List(CompilerPlugins.betterMonadicFor, CompilerPlugins.kindProjector)
   )
+  .settings(assembly / assemblyJarName := "downloader.jar")
+  .enablePlugins(JavaAppPackaging, UniversalPlugin, DockerPlugin)
