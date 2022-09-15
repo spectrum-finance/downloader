@@ -1,8 +1,11 @@
 package fi.spectrum
 package models
 
+import derevo.circe.magnolia.{decoder, encoder}
 import derevo.derive
+import tofu.logging.derivation.loggable
 
+@derive(encoder, decoder, loggable)
 final case class AddressState(
   address: Address,
   poolId: PoolId,
