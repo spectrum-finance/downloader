@@ -4,3 +4,5 @@ services:
     build:
       context: ${DEX_SOURCES_PATH}/target/docker/stage
       dockerfile: Dockerfile
+    volumes:
+      - /data/downloader/conf/env.conf:/downloader/conf/conf.env:ro
