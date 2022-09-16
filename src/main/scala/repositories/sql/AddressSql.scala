@@ -15,5 +15,6 @@ final class AddressSql(implicit lh: LogHandler) {
          |select distinct redeemer from deposits
          |where timestamp > $from and timestamp < $to and pool_id in (${pools.map(n => fr"$n").intercalate(fr",")})
          |order by timestamp limit 1"""
+      .stripMargin
       .query[Address]
 }
