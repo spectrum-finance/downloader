@@ -21,7 +21,17 @@ lazy val root = (project in file("."))
   .settings(
     name := "downloader",
     idePackagePrefix := Some("fi.spectrum"),
-    scalacOptions ++= commonScalacOption
+    scalacOptions ++= commonScalacOption,
+    assembly / test := {},
+    assembly / assemblyMergeStrategy := {
+      case "logback.xml"                                => MergeStrategy.first
+      case "module-info.class"                          => MergeStrategy.discard
+      case "META-INF/intellij-compat.json"              => MergeStrategy.last
+      case other if other.contains("io.netty.versions") => MergeStrategy.first
+      case other if other.contains("scala")             => MergeStrategy.first
+      case other if other.contains("derevo")            => MergeStrategy.last
+      case other                                        => (assembly / assemblyMergeStrategy).value(other)
+    }
   )
   .settings(
     libraryDependencies ++= List(

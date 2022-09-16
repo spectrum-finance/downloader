@@ -1,0 +1,6 @@
+version: '3'
+services:
+  downloader:
+    build:
+      context: ${DEX_SOURCES_PATH}/target/docker/stage
+      dockerfile: Dockerfile
