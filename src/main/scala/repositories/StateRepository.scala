@@ -22,10 +22,9 @@ trait StateRepository[F[_]] {
 
 object StateRepository {
 
-  def create[I[_]: Functor, D[_]: FlatMap: LiftConnectionIO, F[_]](implicit
+  def create[I[_]: Functor, D[_]: FlatMap: LiftConnectionIO, F[_]](txr: Txr[F, D])(implicit
     elh: EmbeddableLogHandler[D],
-    logs: Logs[I, D],
-    txr: Txr[F, D]
+    logs: Logs[I, D]
   ): I[StateRepository[F]] =
     logs.forService[StateRepository[F]].map { implicit __ =>
       elh
