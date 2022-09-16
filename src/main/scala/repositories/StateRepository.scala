@@ -2,19 +2,40 @@ package fi.spectrum
 package repositories
 
 import models.AddressState
+import repositories.sql.StateSql
 
-import cats.{Applicative, Functor}
+import cats.{FlatMap, Functor}
+import derevo.derive
+import doobie.ConnectionIO
+import tofu.doobie.LiftConnectionIO
+import tofu.doobie.log.EmbeddableLogHandler
+import tofu.doobie.transactor.Txr
+import tofu.higherKind.derived.representableK
 import tofu.logging.Logs
 import tofu.syntax.monadic._
-import tofu.syntax.logging._
+import cats.tagless.syntax.functorK._
 
+@derive(representableK)
 trait StateRepository[F[_]] {
   def insertState(state: AddressState): F[Unit]
 }
 
 object StateRepository {
-  def create[I[_]: Functor, F[_]: Applicative](implicit logs: Logs[I, F]): I[StateRepository[F]] =
-    logs.forService[StateRepository[F]].map(implicit __ =>
-      (state: AddressState) => info"Dummy for insert state $state."
-    )
+
+  def create[I[_]: Functor, D[_]: FlatMap: LiftConnectionIO, F[_]](implicit
+    elh: EmbeddableLogHandler[D],
+    logs: Logs[I, D],
+    txr: Txr[F, D]
+  ): I[StateRepository[F]] =
+    logs.forService[StateRepository[F]].map { implicit __ =>
+      elh
+        .embed(implicit lh => new Live(new StateSql()).mapK(LiftConnectionIO[D].liftF))
+        .mapK(txr.trans)
+    }
+
+  final private class Live(sql: StateSql) extends StateRepository[ConnectionIO] {
+
+    def insertState(state: AddressState): ConnectionIO[Unit] =
+      sql.insert(state).void
+  }
 }
