@@ -3,6 +3,7 @@ package models
 
 import derevo.circe.magnolia.{decoder, encoder}
 import derevo.derive
+import doobie.util.Put
 import tofu.logging.derivation.loggable
 
 @derive(encoder, decoder, loggable)
@@ -10,18 +11,18 @@ final case class AddressState(
   address: Address,
   poolId: PoolId,
   timestamp: Long,
-  ergBalance: BigDecimal,
+  lpBalance: BigDecimal,
   weight: BigDecimal
 ) {
 
   def update(
-    newErgBalance: BigDecimal,
+    newLpBalance: BigDecimal,
     newWeight: BigDecimal,
     newTimestamp: Long
   ): AddressState = this.copy(
-    ergBalance = newErgBalance,
-    weight     = newWeight,
-    timestamp  = newTimestamp
+    lpBalance = newLpBalance,
+    weight    = newWeight,
+    timestamp = newTimestamp
   )
 }
 

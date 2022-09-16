@@ -17,8 +17,7 @@ object Order {
     orderId: OrderId,
     poolId: PoolId,
     timestamp: Long,
-    outputAmountX: Long,
-    outputAmountY: Long,
+    lp: Long,
     address: Address
   ) extends Order
 
@@ -27,8 +26,7 @@ object Order {
     orderId: OrderId,
     poolId: PoolId,
     timestamp: Long,
-    inputAmountX: Long,
-    inputAmountY: Long,
+    lp: Long,
     address: Address
   ) extends Order
 }

@@ -13,7 +13,7 @@ final class StateSql(implicit lh: LogHandler) {
     "address",
     "pool_id",
     "timestamp",
-    "erg_balance",
+    "lp_balance",
     "weight"
   )
 

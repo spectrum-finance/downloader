@@ -3,7 +3,7 @@ package fi.spectrum
 import configs.{AppContext, ConfigBundle}
 import processes.DownloaderProgram
 import repositories.pg.{doobieLogging, PostgresTransactor}
-import repositories.{AddressRepository, OrderRepository, PoolsRepository, StateRepository}
+import repositories.{AddressRepository, OrderRepository, StateRepository}
 import services.WeightResolver
 
 import cats.effect.{Blocker, Resource}
@@ -41,7 +41,6 @@ object App extends EnvApp[AppContext] {
 
       implicit0(addresses: AddressRepository[RunF]) <- Resource.eval(AddressRepository.create[InitF, xa.DB, RunF])
       implicit0(orders: OrderRepository[RunF])      <- Resource.eval(OrderRepository.create[InitF, xa.DB, RunF])
-      implicit0(pools: PoolsRepository[RunF])       <- Resource.eval(PoolsRepository.create[InitF, xa.DB, RunF])
       implicit0(state: StateRepository[RunF])       <- Resource.eval(StateRepository.create[InitF, xaD.DB, RunF](xaD))
       implicit0(resolver: WeightResolver[RunF])     <- Resource.eval(WeightResolver.make[InitF, RunF](configs.resolver))
       implicit0(program: DownloaderProgram[StreamF]) <-
