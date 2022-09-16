@@ -24,14 +24,15 @@ object App extends EnvApp[AppContext] {
     for {
       blocker <- Blocker[InitF]
       configs <- Resource.eval(ConfigBundle.load[InitF](configPathOpt, blocker))
+      _ = println(configPathOpt)
       ctx                                   = AppContext.init(configs)
       implicit0(isoKRun: IsoK[RunF, InitF]) = isoKRunByContext(ctx)
-      analyticsTrans <- PostgresTransactor.make[InitF]("analytics-backend-tracker", configs.analyticsPg)
-//      downloaderTrans <- PostgresTransactor.make[InitF]("downloader-backend-tracker", configs.downloaderPg)
+      analyticsTrans <- PostgresTransactor.make[InitF]("analytics-db-trans", configs.analyticsPg)
+//      downloaderTrans <- PostgresTransactor.make[InitF]("downloader-db-trans", configs.downloaderPg)
       implicit0(xa: Txr.Continuational[RunF]) = Txr.continuational[RunF](analyticsTrans.mapK(wr.liftF))
       implicit0(elh: EmbeddableLogHandler[xa.DB]) <- Resource.eval(
                                                        doobieLogging.makeEmbeddableHandler[InitF, RunF, xa.DB](
-                                                         "ispo-backend-tracker-logging"
+                                                         "analytics-db-logging"
                                                        )
                                                      )
       implicit0(logsDb: Logs[InitF, xa.DB]) = Logs.sync[InitF, xa.DB]
