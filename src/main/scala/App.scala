@@ -42,7 +42,7 @@ object App extends EnvApp[AppContext] {
       implicit0(addresses: AddressRepository[RunF]) <- Resource.eval(AddressRepository.create[InitF, xa.DB, RunF])
       implicit0(orders: OrderRepository[RunF])      <- Resource.eval(OrderRepository.create[InitF, xa.DB, RunF])
       implicit0(pools: PoolsRepository[RunF])       <- Resource.eval(PoolsRepository.create[InitF, xa.DB, RunF])
-      implicit0(state: StateRepository[RunF])       <- Resource.eval(StateRepository.create[InitF, xaD.DB, RunF])
+      implicit0(state: StateRepository[RunF])       <- Resource.eval(StateRepository.create[InitF, xaD.DB, RunF](xaD))
       implicit0(resolver: WeightResolver[RunF])     <- Resource.eval(WeightResolver.make[InitF, RunF](configs.resolver))
       implicit0(program: DownloaderProgram[StreamF]) <-
         Resource.eval(DownloaderProgram.make[InitF, RunF, StreamF](configs.resolver))
